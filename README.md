@@ -1,37 +1,73 @@
-## Welcome to GitHub Pages
+<?php // Do not put any HTML above this line
+session_start();
+require_once "pdo.php";
+$stmt = $pdo->query("SELECT profile_id, first_name,last_name , headline from users join Profile on users.user_id = Profile.user_id");
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 
-You can use the [editor on GitHub](https://github.com/theBLUEdotCOMPANY/COURSERA/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chuck Severance's Resume Registry 0118a063</title>
+    <?php require_once "bootstrap.php"; ?>
+</head>
+<body>
+<div class="container">
+    <h2>Chuck Severance's Resume Registry</h2>
+    <?php
+    if (isset($_SESSION['name'])) {
+        echo '<p><a href="logout.php">Logout</a></p>';
+    }
+    ?>
+    <?php
+    if (isset($_SESSION['success'])) {
+        echo('<p style="color: green;">' . htmlentities($_SESSION['success']) . "</p>\n");
+        unset($_SESSION['success']);
+    }
+    ?>
 
-### Markdown
+    <ul>
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/theBLUEdotCOMPANY/COURSERA/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+        <?php
+        if (!isset($_SESSION['name'])) {
+            echo "<p><a href='login.php'>Please log in</a></p>";
+        }
+        if (true) {
+            if (true) {
+                echo "<table border='1'>";
+                echo " <thead><tr>";
+                echo "<th>Name</th>";
+                echo " <th>Headline</th>";
+                if (isset($_SESSION['name'])) {
+                    echo("<th>Action</th>");
+                }
+                echo " </tr></thead>";
+                foreach ($rows as $row) {
+                    echo "<tr><td>";
+                    echo("<a href='view.php?profile_id=" . $row['profile_id'] . "'>" . $row['first_name'] . $row['last_name']  . "</a>");
+                    echo("</td><td>");
+                    echo($row['headline']);
+                    echo("</td>");
+                    if (isset($_SESSION['name'])) {
+                        echo("<td>");
+                        echo('<a href="edit.php?profile_id=' . $row['profile_id'] . '">Edit</a> / <a href="delete.php?profile_id=' . $row['profile_id'] . '">Delete</a>');
+                    }
+                    echo("</td></tr>\n");
+                }
+                echo "</table>";
+            } else {
+                echo 'No rows found';
+            }
+        }
+        echo '</li></ul>';
+        ?>
+        <p><a href="add.php">Add New Entry</a></p>
+        <p>
+            <b>Note:</b> Your implementation should retain data across multiple
+            logout/login sessions. This sample implementation clears all its
+            data periodically - which you should not do in your implementation.
+        </p>
+</div>
+</body>
+</html>

@@ -3,7 +3,7 @@ session_start();
 require_once "pdo.php";
 $stmt = $pdo->query("SELECT profile_id, first_name,last_name , headline from users join Profile on users.user_id = Profile.user_id");
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
+?php>
 
 
 <!DOCTYPE html>
